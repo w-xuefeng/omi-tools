@@ -1,0 +1,30 @@
+{
+  "name": "omi-tools",
+  "version": "1.0.0",
+  "description": "Auxiliary tools for omi",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "rimraf lib && ./node_modules/.bin/tsc --project tsconfig.json"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/w-xuefeng/omi-tools.git"
+  },
+  "keywords": [
+    "omi",
+    "tools"
+  ],
+  "author": "w-xuefeng",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/w-xuefeng/omi-tools/issues"
+  },
+  "files": [
+    "lib"
+  ],
+  "homepage": "https://github.com/w-xuefeng/omi-tools#readme",
+  "devDependencies": {
+    "rimraf": "^3.0.2",
+    "typescript": "^4.3.5"
+  }
+}
