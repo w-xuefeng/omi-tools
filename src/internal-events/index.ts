@@ -6,7 +6,7 @@ const rmIEFP = (props: Record<string, any>) => {
       resultProps[k] = props[k]
     }
     return resultProps
-  }, {})
+  }, {} as Record<string, any>)
 }
 
 export default rmIEFP
