@@ -6,4 +6,4 @@
 
 | tools  | params        | returns                               | desc                             |
 | ------ | ------------- | ------------------------------------- | -------------------------------- |
-| rmIEFP | props: object | props(without internal events):object | remove inernal events from props |
+| rmIEFP | props: object | props(without internal events):object | remove internal events from props |
