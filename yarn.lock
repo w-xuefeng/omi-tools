@@ -2,6 +2,11 @@
 # yarn lockfile v1
 
 
+"@types/node@^16.3.2":
+  version "16.3.2"
+  resolved "https://registry.nlark.com/@types/node/download/@types/node-16.3.2.tgz?cache=0&sync_timestamp=1626221012858&other_urls=https%3A%2F%2Fregistry.nlark.com%2F%40types%2Fnode%2Fdownload%2F%40types%2Fnode-16.3.2.tgz#655432817f83b51ac869c2d51dd8305fb8342e16"
+  integrity sha1-ZVQygX+DtRrIacLVHdgwX7g0LhY=
+
 balanced-match@^1.0.0:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/balanced-match/-/balanced-match-1.0.2.tgz#e83e3a7e3f300b34cb9d87f615fa0cbf357690ee"
