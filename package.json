@@ -1,10 +1,11 @@
 {
   "name": "omi-tools",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Auxiliary tools for omi",
   "main": "lib/index.js",
   "scripts": {
-    "build": "rimraf lib && ./node_modules/.bin/tsc --project tsconfig.json"
+    "build": "rimraf lib && ./node_modules/.bin/tsc --project tsconfig.json",
+    "prepublishOnly": "yarn build"
   },
   "repository": {
     "type": "git",
