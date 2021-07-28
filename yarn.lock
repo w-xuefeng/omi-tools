@@ -67,10 +67,10 @@ minimatch@^3.0.4:
   dependencies:
     brace-expansion "^1.1.7"
 
-omi@^6.19.23:
-  version "6.19.23"
-  resolved "https://registry.yarnpkg.com/omi/-/omi-6.19.23.tgz#91018b368ae63d5635891dbb6f4d8a2ab60fc37b"
-  integrity sha512-cOTWrAq86ymqsJnuM7bwSXvCSi9CTCz4+k9lkIas5oWHn4qOH/tqORPz+D7J6HzuKbaiNkPnNtcmgFeVEQdH1g==
+omi@^6.19.25:
+  version "6.19.25"
+  resolved "https://registry.yarnpkg.com/omi/-/omi-6.19.25.tgz#25ed2ed4342339d6b98134643761a152fe557357"
+  integrity sha512-JuUblIqksk/KmQM6xOoA5tvhXrGOx5j/n1lX0S1xOlVmVJ2OMOw1YDZajnf6lHrktlkDVK9tZdfA3/i00qPWgA==
   dependencies:
     construct-style-sheets-polyfill "^3.0.0-0"
 
