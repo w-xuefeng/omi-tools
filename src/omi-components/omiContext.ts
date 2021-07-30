@@ -4,7 +4,10 @@ import reactive from './reactive'
 let CPCount = 0
 
 export interface ProviderProps<T> {
-  value: T,
+  value: T
+}
+
+export interface ProviderPropsWithSetter<T> extends ProviderProps<T> {
   setValue(value: T): void
 }
 
@@ -34,7 +37,7 @@ export interface IOmiContext<T> {
 
 export default function createContext<T>(defaultValue: T): IOmiContext<T> {
   CPCount++
-  const useContext = reactive<ProviderProps<T>>({
+  const useContext = reactive<ProviderPropsWithSetter<T>>({
     value: defaultValue,
     setValue(value: T) {
       this.value = value
@@ -43,8 +46,8 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
   return {
     Provider: (() => {
       class Provider extends WeElement<ProviderProps<T>> {
-        render(props: Omi.RenderableProps<ProviderProps<T>>, store: IStore<ProviderProps<T>>) {
-          const context = useContext.apply(this) as ProviderProps<T>
+        render(props: Omi.RenderableProps<ProviderProps<T>>, store: IStore<ProviderPropsWithSetter<T>>) {
+          const context = useContext.apply(this) as ProviderPropsWithSetter<T>
           context.setValue(props.value || context.value)
           store.context = context
           return props.children
@@ -55,7 +58,7 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
     })(),
     Consumer: (() => {
       class Consumer extends WeElement<ConsumerProps> {
-        render(props: Omi.RenderableProps<ConsumerProps>, store: IStore<ProviderProps<T>>) {
+        render(props: Omi.RenderableProps<ConsumerProps>, store: IStore<ProviderPropsWithSetter<T>>) {
           const { children } = props
           return Array.isArray(children) && typeof children[0] === 'function'
             ? children[0](store.context)
