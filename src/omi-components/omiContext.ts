@@ -3,41 +3,42 @@ import reactive from './reactive'
 
 let CPCount = 0
 
-interface ProviderProps<T> {
-  value?: T
+export interface ProviderProps<T> {
+  value: T
 }
 
-interface ConsumerProps { }
+export interface ConsumerProps { }
 
-interface IStore<T> extends Record<string, any> {
+export interface IStore<T> extends Record<string, any> {
   context: T
 }
 
-interface Provider<T> extends Omi.WeElement<ProviderProps<T>> { }
+export interface Provider<T> extends Omi.WeElement<ProviderProps<T>> { }
 
-interface Consumer extends Omi.WeElement { }
+export interface Consumer extends Omi.WeElement { }
 
-interface ProviderConstructor<T> {
-  new(): Provider<T>;
+export interface ProviderConstructor<T> {
+  new(): Provider<T>
 }
 
-interface ConsumerConstructor {
-  new(): Consumer;
+export interface ConsumerConstructor {
+  new(): Consumer
 }
 
-interface IOmiContext<T> {
+export interface IOmiContext<T> {
   Provider: ProviderConstructor<T>
   Consumer: ConsumerConstructor
+  useContext: () => ProviderProps<T>
 }
 
 export default function createContext<T>(defaultValue: T): IOmiContext<T> {
   CPCount++
-  const useContext = reactive<{ value: T }>({ value: defaultValue })
+  const useContext = reactive<ProviderProps<T>>({ value: defaultValue })
   return {
     Provider: (() => {
       class Provider extends WeElement<ProviderProps<T>> {
         render(props: Omi.RenderableProps<ProviderProps<T>>, store: IStore<T>) {
-          const { value } = useContext.apply(this) as { value: T }
+          const { value } = useContext.apply(this) as ProviderProps<T>
           store.context = props.value || value
           return props.children
         }
@@ -56,6 +57,7 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
       }
       define(`o-consumer-${CPCount}`, Consumer)
       return Consumer
-    })()
+    })(),
+    useContext
   }
 }

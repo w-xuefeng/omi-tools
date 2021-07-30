@@ -1,18 +1,19 @@
 import { define, WeElement } from 'omi'
 
-export interface IOmiLifetimes<Props, Store> extends WeElement<Props> {
+export interface IOmiLifetimes<Props, Store> extends Omi.WeElement<Props> {
   staticCss?: string | CSSStyleSheet | (string | CSSStyleSheet)[]
   propTypes?: Record<string, any>
   defaultProps?: Record<string, any>
   isLightDom?: boolean
   compute?: any
   render(props: Omi.RenderableProps<Props>, store: Store): JSX.Element | Omi.ComponentChild | undefined
+  render(props: Omi.RenderableProps<Props>, store: Store, thisArg: Omi.WeElement<Props>): JSX.Element | Omi.ComponentChild | undefined
 }
 
 export function checkLifeOptionsRun<Props, Store>(
   options: Partial<IOmiLifetimes<Props, Store>>,
   lifeTime: keyof IOmiLifetimes<Props, Store>,
-  context: WeElement,
+  context: Omi.WeElement,
   args?: any[]
 ) {
   // @ts-ignore
@@ -38,7 +39,7 @@ export function createFunctionComp<Props = any, Store = any>(
     static isLightDom = options.isLightDom
     compute = options.compute
     render(props: Omi.RenderableProps<Props>, store: Store) {
-      return checkLifeOptionsRun(options, 'render', this, [props, { ...store, ...extraStore }])
+      return checkLifeOptionsRun(options, 'render', this, [props, { ...store, ...extraStore }, this])
     }
   }
 
