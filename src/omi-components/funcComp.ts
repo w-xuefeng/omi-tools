@@ -6,8 +6,7 @@ export interface IOmiLifetimes<Props, Store> extends Omi.WeElement<Props> {
   defaultProps?: Record<string, any>
   isLightDom?: boolean
   compute?: any
-  render(props: Omi.RenderableProps<Props>, store: Store): JSX.Element | Omi.ComponentChild | undefined
-  render(props: Omi.RenderableProps<Props>, store: Store, thisArg: Omi.WeElement<Props>): JSX.Element | Omi.ComponentChild | undefined
+  renderWithThis(props: Omi.RenderableProps<Props>, store: Store, componentContext: Omi.WeElement<Props>): JSX.Element | Omi.ComponentChild | undefined
 }
 
 export function checkLifeOptionsRun<Props, Store>(
@@ -16,7 +15,6 @@ export function checkLifeOptionsRun<Props, Store>(
   context: Omi.WeElement,
   args?: any[]
 ) {
-  // @ts-ignore
   return options && typeof options[lifeTime] === 'function' && options[lifeTime].apply(context, args)
 }
 
@@ -39,7 +37,7 @@ export function createFunctionComp<Props = any, Store = any>(
     static isLightDom = options.isLightDom
     compute = options.compute
     render(props: Omi.RenderableProps<Props>, store: Store) {
-      return checkLifeOptionsRun(options, 'render', this, [props, { ...store, ...extraStore }, this])
+      return checkLifeOptionsRun(options, 'renderWithThis', this, [props, { ...store, ...extraStore }, this])
     }
   }
 
@@ -69,13 +67,13 @@ export function createFunctionComp<Props = any, Store = any>(
 
 export function makeFC<Props extends {} = any, Store extends {} = any>(
   tagName: string,
-  render: IOmiLifetimes<Props, Store>['render'],
+  render: IOmiLifetimes<Props, Store>['renderWithThis'],
   lifeTimes?: Partial<IOmiLifetimes<Props, Store>>,
   extraStore?: Store
 ) {
   return createFunctionComp<Props, Store>(
     tagName,
-    { ...lifeTimes, render },
+    { ...lifeTimes, renderWithThis: render },
     extraStore
   )
 }
