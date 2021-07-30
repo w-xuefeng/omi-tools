@@ -37,19 +37,23 @@ export interface IOmiContext<T> {
 
 export default function createContext<T>(defaultValue: T): IOmiContext<T> {
   CPCount++
-  const useContext = reactive<ProviderPropsWithSetter<T>>({
+  const defaultContext = {
     value: defaultValue,
     setValue(value: T) {
       this.value = value
     }
-  })
+  }
+  const useContext = reactive<ProviderPropsWithSetter<T>>(defaultContext)
   return {
     Provider: (() => {
       class Provider extends WeElement<ProviderProps<T>> {
+        context: ProviderPropsWithSetter<T> = defaultContext
+        install() {
+          this.context = useContext.apply(this) as ProviderPropsWithSetter<T>
+          this.context.setValue(this.props.value || this.context.value)
+        }
         render(props: Omi.RenderableProps<ProviderProps<T>>, store: IStore<ProviderPropsWithSetter<T>>) {
-          const context = useContext.apply(this) as ProviderPropsWithSetter<T>
-          context.setValue(props.value || context.value)
-          store.context = context
+          store.context = this.context
           return props.children
         }
       }
