@@ -39,21 +39,31 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
   CPCount++
   const defaultContext = {
     value: defaultValue,
-    setValue(value: T) {
-      this.value = value
+    setValue(value: Partial<T> | ((preValue: T) => T | Partial<T>)) {
+      const nextPartialValue = typeof value === 'function' ? value(this.value) : value
+      if (nextPartialValue && 'object' === typeof nextPartialValue) {
+        this.value = Array.isArray(nextPartialValue)
+          ? [...nextPartialValue] as unknown as T
+          : {
+            ...this.value,
+            ...nextPartialValue
+          }
+      } else {
+        this.value = nextPartialValue as T
+      }
     }
   }
   const useContext = reactive<ProviderPropsWithSetter<T>>(defaultContext)
   return {
     Provider: (() => {
       class Provider extends WeElement<ProviderProps<T>> {
-        context: ProviderPropsWithSetter<T> = defaultContext
         install() {
-          this.context = useContext.apply(this) as ProviderPropsWithSetter<T>
-          this.context.setValue(this.props.value || this.context.value)
+          const context = useContext.apply(this) as ProviderPropsWithSetter<T>
+          context.setValue(this.props.value || context.value)
+          // @ts-ignore
+          this.store = { ...this.store, context }
         }
         render(props: Omi.RenderableProps<ProviderProps<T>>, store: IStore<ProviderPropsWithSetter<T>>) {
-          store.context = this.context
           return props.children
         }
       }
