@@ -8,7 +8,7 @@ export interface ProviderProps<T> {
 }
 
 export interface ProviderPropsWithSetter<T> extends ProviderProps<T> {
-  setValue(value: T): void
+  setValue(value: Partial<T> | ((preValue: T) => T | Partial<T>)): void
 }
 
 export interface ConsumerProps { }
