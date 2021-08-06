@@ -1,5 +1,4 @@
 import { define, WeElement } from 'omi'
-import reactive from './reactive'
 
 let CPCount = 0
 
@@ -37,56 +36,60 @@ export interface IOmiContext<T> {
 
 export default function createContext<T>(defaultValue: T): IOmiContext<T> {
   CPCount++
-  const defaultContext = {
-    state: defaultValue,
-    setState(value: Partial<T> | ((preValue: T) => T | Partial<T>), callback?: (state: T) => void) {
-      const nextPartialValue = typeof value === 'function' ? value(this.state) : value
-      if (nextPartialValue && 'object' === typeof nextPartialValue) {
-        this.state = Array.isArray(nextPartialValue)
-          ? [...nextPartialValue] as unknown as T
-          : {
-            ...this.state,
-            ...nextPartialValue
-          }
-      } else {
-        this.state = nextPartialValue as T
+  const Provider = (() => {
+    class Provider extends WeElement<ProviderProps<T>> {
+      state = defaultValue
+      setState(value: Partial<T> | ((preValue: T) => T | Partial<T>), callback?: (state: T) => void) {
+        const nextPartialValue = typeof value === 'function' ? value(this.state) : value
+        if (nextPartialValue && 'object' === typeof nextPartialValue) {
+          this.state = Array.isArray(nextPartialValue)
+            ? [...nextPartialValue] as unknown as T
+            : {
+              ...this.state,
+              ...nextPartialValue
+            }
+        } else {
+          this.state = nextPartialValue as T
+        }
+        this.update()
+        'function' === typeof callback && callback(this.state)
       }
-      'function' === typeof callback && callback(this.state)
+      get context() {
+        return {
+          state: this.state,
+          setState: this.setState
+        }
+      }
+      install() {
+        this.props.state && this.context.setState(this.props.state)
+        // @ts-ignore
+        this.store = { ...this.store, context: this.context }
+      }
+      render(props: Omi.OmiProps<ProviderProps<T>>, store: IStore<ProviderPropsWithSetter<T>>) {
+        return props.children
+      }
     }
-  }
-  const useContext = reactive<ProviderPropsWithSetter<T>>(defaultContext)
+    define(`o-provider-${CPCount}`, Provider)
+    return Provider
+  })()
+  const Consumer = (() => {
+    class Consumer extends WeElement<ConsumerProps> {
+      render(props: Omi.OmiProps<ConsumerProps>, store: IStore<ProviderPropsWithSetter<T>>) {
+        const { children } = props
+        return Array.isArray(children)
+          && typeof children[0] === 'function'
+          && store
+          && store.context
+          ? children[0](store.context)
+          : children
+      }
+    }
+    define(`o-consumer-${CPCount}`, Consumer)
+    return Consumer
+  })()
   return {
-    Provider: (() => {
-      class Provider extends WeElement<ProviderProps<T>> {
-        context: ProviderPropsWithSetter<T> | null = null
-        install() {
-          this.context = useContext.apply(this) as ProviderPropsWithSetter<T>
-          this.context.setState(this.props.state || this.context.state)
-          // @ts-ignore
-          this.store = { ...this.store, context: this.context }
-        }
-        render(props: Omi.OmiProps<ProviderProps<T>>, store: IStore<ProviderPropsWithSetter<T>>) {
-          return props.children
-        }
-      }
-      define(`o-provider-${CPCount}`, Provider)
-      return Provider
-    })(),
-    Consumer: (() => {
-      class Consumer extends WeElement<ConsumerProps> {
-        render(props: Omi.OmiProps<ConsumerProps>, store: IStore<ProviderPropsWithSetter<T>>) {
-          const { children } = props
-          return Array.isArray(children)
-            && typeof children[0] === 'function'
-            && store
-            && store.context
-            ? children[0](store.context)
-            : children
-        }
-      }
-      define(`o-consumer-${CPCount}`, Consumer)
-      return Consumer
-    })(),
-    useContext
+    Provider,
+    Consumer,
+    useContext: () => Provider.prototype.context
   }
 }
