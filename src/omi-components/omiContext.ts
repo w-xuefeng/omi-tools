@@ -39,7 +39,7 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
   const Provider = (() => {
     class Provider extends WeElement<ProviderProps<T>> {
       state = defaultValue
-      setState(value: Partial<T> | ((preValue: T) => T | Partial<T>), callback?: (state: T) => void) {
+      setState = (value: Partial<T> | ((preValue: T) => T | Partial<T>), callback?: (state: T) => void) => {
         const nextPartialValue = typeof value === 'function' ? value(this.state) : value
         if (nextPartialValue && 'object' === typeof nextPartialValue) {
           this.state = Array.isArray(nextPartialValue)
