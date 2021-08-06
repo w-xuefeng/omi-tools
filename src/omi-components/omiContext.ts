@@ -38,34 +38,25 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
   CPCount++
   const Provider = (() => {
     class Provider extends WeElement<ProviderProps<T>> {
-      state = defaultValue
-      setState = (value: Partial<T> | ((preValue: T) => T | Partial<T>), callback?: (state: T) => void) => {
-        const nextPartialValue = typeof value === 'function' ? value(this.state) : value
-        if (nextPartialValue && 'object' === typeof nextPartialValue) {
-          this.state = Array.isArray(nextPartialValue)
-            ? [...nextPartialValue] as unknown as T
-            : {
-              ...this.state,
-              ...nextPartialValue
-            }
-        } else {
-          this.state = nextPartialValue as T
-        }
-        this.forceUpdate()
-        'function' === typeof callback && callback(this.state)
-      }
-      get context() {
-        return {
-          state: this.state,
-          setState: this.setState
+      provide = {
+        state: defaultValue,
+        setState: (value: Partial<T> | ((preValue: T) => T | Partial<T>), callback?: (state: T) => void) => {
+          const nextPartialValue = typeof value === 'function' ? value(this.provide.state) : value
+          if (nextPartialValue && 'object' === typeof nextPartialValue) {
+            this.provide.state = Array.isArray(nextPartialValue)
+              ? [...nextPartialValue] as unknown as T
+              : {
+                ...this.provide.state,
+                ...nextPartialValue
+              }
+          } else {
+            this.provide.state = nextPartialValue as T
+          }
+          this.update()
+          'function' === typeof callback && callback(this.provide.state)
         }
       }
-      install() {
-        this.props.state && this.context.setState(this.props.state)
-        // @ts-ignore
-        this.store = { ...this.store, context: this.context }
-      }
-      render(props: Omi.OmiProps<ProviderProps<T>>, store: IStore<ProviderPropsWithSetter<T>>) {
+      render(props: Omi.OmiProps<ProviderProps<T>>) {
         return props.children
       }
     }
@@ -74,13 +65,12 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
   })()
   const Consumer = (() => {
     class Consumer extends WeElement<ConsumerProps> {
-      render(props: Omi.OmiProps<ConsumerProps>, store: IStore<ProviderPropsWithSetter<T>>) {
+      inject = ['state', 'setState']
+      render(props: Omi.OmiProps<ConsumerProps>) {
         const { children } = props
         return Array.isArray(children)
           && typeof children[0] === 'function'
-          && store
-          && store.context
-          ? children[0](store.context)
+          ? children[0](this.injection)
           : children
       }
     }
@@ -90,6 +80,6 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
   return {
     Provider,
     Consumer,
-    useContext: () => Provider.prototype.context
+    useContext: () => Provider.prototype.provide
   }
 }
