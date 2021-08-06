@@ -1,6 +1,6 @@
 {
   "name": "omi-tools",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Auxiliary tools for omi",
   "main": "lib/index.js",
   "scripts": {
