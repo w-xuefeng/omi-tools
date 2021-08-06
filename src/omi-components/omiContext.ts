@@ -51,7 +51,7 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
         } else {
           this.state = nextPartialValue as T
         }
-        this.update()
+        this.forceUpdate()
         'function' === typeof callback && callback(this.state)
       }
       get context() {
