@@ -31,7 +31,7 @@ function MakeReactive<ReactiveData = Record<string, any>>(
     // @ts-ignore
     get(obj: Record<string, any>, prop: string) {
       const val = obj[prop]
-      if (typeof val === 'object' && val !== null) {
+      if (typeof val === 'object' && val !== null && prop !== '__internal_proxy') {
         return (val.__internal_proxy =
           val.__internal_proxy || new Proxy(val, handler))
       } else {

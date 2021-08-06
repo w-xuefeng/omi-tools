@@ -6,7 +6,7 @@ export interface IOmiLifetimes<Props, Store> extends Omi.WeElement<Props> {
   defaultProps?: Record<string, any>
   isLightDom?: boolean
   compute?: any
-  renderWithThis(props: Omi.RenderableProps<Props>, store: Store, componentContext: Omi.WeElement<Props>): JSX.Element | Omi.ComponentChild | undefined
+  renderWithThis(props: Omi.OmiProps<Props>, store: Store, componentContext: Omi.WeElement<Props>): JSX.Element | Omi.ComponentChild | undefined
 }
 
 export function checkLifeOptionsRun<Props, Store>(
@@ -36,7 +36,7 @@ export function createFunctionComp<Props = any, Store = any>(
     static defaultProps = options.defaultProps
     static isLightDom = options.isLightDom
     compute = options.compute
-    render(props: Omi.RenderableProps<Props>, store: Store) {
+    render(props: Omi.OmiProps<Props>, store: Store) {
       return checkLifeOptionsRun(options, 'renderWithThis', this, [props, { ...store, ...extraStore }, this])
     }
   }

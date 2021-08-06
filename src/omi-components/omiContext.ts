@@ -63,7 +63,7 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
           // @ts-ignore
           this.store = { ...this.store, context }
         }
-        render(props: Omi.RenderableProps<ProviderProps<T>>, store: IStore<ProviderPropsWithSetter<T>>) {
+        render(props: Omi.OmiProps<ProviderProps<T>>, store: IStore<ProviderPropsWithSetter<T>>) {
           return props.children
         }
       }
@@ -72,7 +72,7 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
     })(),
     Consumer: (() => {
       class Consumer extends WeElement<ConsumerProps> {
-        render(props: Omi.RenderableProps<ConsumerProps>, store: IStore<ProviderPropsWithSetter<T>>) {
+        render(props: Omi.OmiProps<ConsumerProps>, store: IStore<ProviderPropsWithSetter<T>>) {
           const { children } = props
           return Array.isArray(children) && typeof children[0] === 'function'
             ? children[0](store.context)
