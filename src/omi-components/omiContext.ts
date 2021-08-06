@@ -4,11 +4,11 @@ import reactive from './reactive'
 let CPCount = 0
 
 export interface ProviderProps<T> {
-  value: T
+  state: T
 }
 
 export interface ProviderPropsWithSetter<T> extends ProviderProps<T> {
-  setValue(value: Partial<T> | ((preValue: T) => T | Partial<T>)): void
+  setState(value: Partial<T> | ((preValue: T) => T | Partial<T>), callback?: (state: T) => void): void
 }
 
 export interface ConsumerProps { }
@@ -38,30 +38,32 @@ export interface IOmiContext<T> {
 export default function createContext<T>(defaultValue: T): IOmiContext<T> {
   CPCount++
   const defaultContext = {
-    value: defaultValue,
-    setValue(value: Partial<T> | ((preValue: T) => T | Partial<T>)) {
-      const nextPartialValue = typeof value === 'function' ? value(this.value) : value
+    state: defaultValue,
+    setState(value: Partial<T> | ((preValue: T) => T | Partial<T>), callback?: (state: T) => void) {
+      const nextPartialValue = typeof value === 'function' ? value(this.state) : value
       if (nextPartialValue && 'object' === typeof nextPartialValue) {
-        this.value = Array.isArray(nextPartialValue)
+        this.state = Array.isArray(nextPartialValue)
           ? [...nextPartialValue] as unknown as T
           : {
-            ...this.value,
+            ...this.state,
             ...nextPartialValue
           }
       } else {
-        this.value = nextPartialValue as T
+        this.state = nextPartialValue as T
       }
+      'function' === typeof callback && callback(this.state)
     }
   }
   const useContext = reactive<ProviderPropsWithSetter<T>>(defaultContext)
   return {
     Provider: (() => {
       class Provider extends WeElement<ProviderProps<T>> {
+        context: ProviderPropsWithSetter<T> | null = null
         install() {
-          const context = useContext.apply(this) as ProviderPropsWithSetter<T>
-          context.setValue(this.props.value || context.value)
+          this.context = useContext.apply(this) as ProviderPropsWithSetter<T>
+          this.context.setState(this.props.state || this.context.state)
           // @ts-ignore
-          this.store = { ...this.store, context }
+          this.store = { ...this.store, context: this.context }
         }
         render(props: Omi.OmiProps<ProviderProps<T>>, store: IStore<ProviderPropsWithSetter<T>>) {
           return props.children
