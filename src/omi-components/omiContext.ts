@@ -80,6 +80,6 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
   return {
     Provider,
     Consumer,
-    useContext: () => Provider.prototype.provide
+    useContext: () => (new Provider()).provide
   }
 }
