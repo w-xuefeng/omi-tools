@@ -62,6 +62,9 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
           setState: this.setState
         }
       }
+      install() {
+        this.setState(this.props.state || defaultValue)
+      }
       receiveProps() {
         this.setState(this.props.state || defaultValue)
       }
