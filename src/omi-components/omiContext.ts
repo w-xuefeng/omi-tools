@@ -76,7 +76,7 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
     class Consumer extends WeElement<ConsumerProps> {
       inject = ['state', 'setState']
       getChildren(props: Omi.OmiProps<any>): Omi.ComponentChildren {
-        const { children } = props
+        const children = props.children || props
         return Array.isArray(children) && children.length > 0
           ? children.map(child => this.getChildren(child))
           : typeof children === 'function'
@@ -87,6 +87,24 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
                 children: this.getChildren(children)
               }
               : children
+      }
+      receiveProps() {
+        if (this.inject) {
+          let p = this.parentNode as (Node & ParentNode & { provide?: any, host?: any }) | null;
+          let provide: Record<string, any> | undefined = undefined;
+          while (p && !provide) {
+            provide = p.provide;
+            p = p.parentNode || p.host;
+          }
+          if (provide) {
+            this.injection = this.inject.reduce(
+              (injection, injectKey) => (injection[injectKey] = provide && provide[injectKey], injection),
+              ({ ...this.injection }) as Record<string, any>
+            )
+          } else {
+            throw 'The provide prop was not found on the parent node or the provide type is incorrect.';
+          }
+        }
       }
       render(props: Omi.OmiProps<ConsumerProps>) {
         return this.getChildren(props)
