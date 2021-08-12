@@ -85,7 +85,7 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
         return this.getChildren(props)
       }
     }
-    define(`o-consumer-${CPCount} `, Consumer)
+    define(`o-consumer-${CPCount}`, Consumer)
     return Consumer
   })()
   return {
