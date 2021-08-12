@@ -1,4 +1,4 @@
-import { define, WeElement } from 'omi'
+import Omi, { define, WeElement } from 'omi'
 
 let CPCount = 0
 
@@ -11,10 +11,6 @@ export interface ProviderPropsWithSetter<T> extends ProviderProps<T> {
 }
 
 export interface ConsumerProps { }
-
-export interface IStore<T> extends Record<string, any> {
-  context: T
-}
 
 export interface Provider<T> extends Omi.WeElement<ProviderProps<T>> { }
 
@@ -38,22 +34,28 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
   CPCount++
   const Provider = (() => {
     class Provider extends WeElement<ProviderProps<T>> {
-      provide = {
-        state: defaultValue,
-        setState: (value: Partial<T> | ((preValue: T) => T | Partial<T>), callback?: (state: T) => void) => {
-          const nextPartialValue = typeof value === 'function' ? value(this.provide.state) : value
-          if (nextPartialValue && 'object' === typeof nextPartialValue) {
-            this.provide.state = Array.isArray(nextPartialValue)
-              ? [...nextPartialValue] as unknown as T
-              : {
-                ...this.provide.state,
-                ...nextPartialValue
-              }
-          } else {
-            this.provide.state = nextPartialValue as T
-          }
-          this.update()
-          'function' === typeof callback && callback(this.provide.state)
+      provide: ProviderPropsWithSetter<T>;
+      state = defaultValue
+      setState = (value: Partial<T> | ((preValue: T) => T | Partial<T>), callback?: (state: T) => void) => {
+        const nextPartialValue = typeof value === 'function' ? value(this.state) : value
+        if (nextPartialValue && 'object' === typeof nextPartialValue) {
+          this.state = Array.isArray(nextPartialValue)
+            ? [...nextPartialValue] as unknown as T
+            : {
+              ...this.state,
+              ...nextPartialValue
+            }
+        } else {
+          this.state = nextPartialValue as T
+        }
+        this.update()
+        'function' === typeof callback && callback(this.state)
+      }
+      constructor() {
+        super()
+        this.provide = {
+          state: this.state,
+          setState: this.setState
         }
       }
       render(props: Omi.OmiProps<ProviderProps<T>>) {
@@ -66,15 +68,24 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
   const Consumer = (() => {
     class Consumer extends WeElement<ConsumerProps> {
       inject = ['state', 'setState']
-      render(props: Omi.OmiProps<ConsumerProps>) {
+      getChildren(props: Omi.OmiProps<any>): Omi.ComponentChildren {
         const { children } = props
-        return Array.isArray(children)
-          && typeof children[0] === 'function'
-          ? children[0](this.injection)
-          : children
+        return Array.isArray(children) && children.length > 0
+          ? children.map(child => this.getChildren(child))
+          : typeof children === 'function'
+            ? children(this.injection)
+            : typeof children === 'object' && children && 'children' in children
+              ? {
+                ...children,
+                children: this.getChildren(children)
+              }
+              : children
+      }
+      render(props: Omi.OmiProps<ConsumerProps>) {
+        return this.getChildren(props)
       }
     }
-    define(`o-consumer-${CPCount}`, Consumer)
+    define(`o-consumer-${CPCount} `, Consumer)
     return Consumer
   })()
   return {
