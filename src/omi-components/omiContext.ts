@@ -48,6 +48,10 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
         } else {
           this.state = nextPartialValue as T
         }
+        this.provide = {
+          ...this.provide,
+          state: this.state
+        }
         this.update()
         'function' === typeof callback && callback(this.state)
       }
@@ -57,6 +61,9 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
           state: this.state,
           setState: this.setState
         }
+      }
+      receiveProps() {
+        this.setState(this.props.state || defaultValue)
       }
       render(props: Omi.OmiProps<ProviderProps<T>>) {
         return props.children
