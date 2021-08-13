@@ -1,4 +1,4 @@
-import Omi, { define, WeElement } from 'omi'
+import { define, WeElement } from 'omi'
 
 let CPCount = 0
 
