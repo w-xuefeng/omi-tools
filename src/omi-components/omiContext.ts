@@ -32,10 +32,11 @@ export interface IOmiContext<T> {
 
 export default function createContext<T>(defaultValue: T): IOmiContext<T> {
   CPCount++
+  const contextStore = { state: defaultValue }
   const Provider = (() => {
     class Provider extends WeElement<ProviderProps<T>> {
       provide: ProviderPropsWithSetter<T>;
-      state = defaultValue
+      state = contextStore.state
       setState = (value: Partial<T> | ((preValue: T) => T | Partial<T>), callback?: (state: T) => void) => {
         const nextPartialValue = typeof value === 'function' ? value(this.state) : value
         if (nextPartialValue && 'object' === typeof nextPartialValue) {
@@ -52,6 +53,7 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
           ...this.provide,
           state: this.state
         }
+        contextStore.state = this.state
         this.update()
         'function' === typeof callback && callback(this.state)
       }
@@ -63,10 +65,10 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
         }
       }
       install() {
-        this.setState(this.props.state || defaultValue)
+        this.setState(this.props.state || contextStore.state)
       }
       receiveProps() {
-        this.setState(this.props.state || defaultValue)
+        this.setState(this.props.state || contextStore.state)
       }
       render(props: Omi.OmiProps<ProviderProps<T>>) {
         return props.children
@@ -119,6 +121,6 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
   return {
     Provider,
     Consumer,
-    useContext: () => (new Provider()).provide
+    useContext: () => contextStore
   }
 }
