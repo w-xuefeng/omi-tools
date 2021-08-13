@@ -13,3 +13,7 @@ Auxiliary tools for omi
 | OC.reactive      | `data`: `object`                                                                                                                                                                  | `hooks`: `Function`                                                                                     | generate some reactive data                     |
 | OC.createContext | `defaultValue`: any                                                                                                                                                               | `IOmiContext<T>`: {<br>`Provider`: `ProviderConstructor<T>`, <br>`Consumer`: `ConsumerConstructor`<br>} | generate Provider/Consumer ComponentConstructor |
 | OC.useContext    | `context`: {<br>`Provider`: `ProviderConstructor<T>`, <br>`Consumer`: `ConsumerConstructor`<br>}                                                                                  | `value`: T                                                                                              | Context Consumer Hooks                          |
+
+
+# Usecase
+- [https://codepen.io/w-xuefeng/pen/LYyxqLo](https://codepen.io/w-xuefeng/pen/LYyxqLo)
