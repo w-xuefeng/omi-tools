@@ -18,7 +18,9 @@ export function checkLifeOptionsRun<Props, Store>(
   return options && typeof options[lifeTime] === 'function' && options[lifeTime].apply(context, args)
 }
 
-export interface FC<Props, Store> extends Omi.WeElement<Props> { }
+export interface FC<Props, Store> extends Omi.WeElement<Props> {
+  render(props: Omi.OmiProps<Props>, store: Store): Omi.ComponentChildren
+}
 
 export interface FCConstructor<Props, Store> {
   new(): FC<Props, Store>;
@@ -28,9 +30,9 @@ export function createFunctionComp<Props = any, Store = any>(
   tagName: string,
   options: Partial<IOmiLifetimes<Props, Store>>,
   extraStore?: Store,
-  BaseFComponent: typeof WeElement = WeElement,
+  BaseFComponent: typeof WeElement = WeElement
 ): FCConstructor<Props, Store> {
-  class FC<Props, Store> extends BaseFComponent<Props>{
+  class FC<Props, Store> extends BaseFComponent<Props> {
     static css = options.staticCss || ''
     static propTypes = options.propTypes
     static defaultProps = options.defaultProps
@@ -54,7 +56,7 @@ export function createFunctionComp<Props = any, Store = any>(
     const lifetime = options[k as keyof typeof options]
     if (typeof lifetime === 'function') {
       Object.defineProperty(FC.prototype, k, {
-        value: function () {
+        value: function() {
           return lifetime.apply(this, arguments)
         }
       })

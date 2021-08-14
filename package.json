@@ -4,6 +4,9 @@
   "description": "Auxiliary tools for omi",
   "main": "lib/index.js",
   "scripts": {
+    "lint": "./node_modules/.bin/eslint -c ./.eslintrc.js --ext .ts,.tsx src/",
+    "lint:fix": "./node_modules/.bin/eslint -c ./.eslintrc.js --ext .ts,.tsx src/ --fix",
+    "prebuild": "yarn lint",
     "build": "rimraf lib && ./node_modules/.bin/tsc --project tsconfig.json",
     "prepublishOnly": "yarn build"
   },
@@ -26,6 +29,13 @@
   "homepage": "https://github.com/w-xuefeng/omi-tools#readme",
   "devDependencies": {
     "@types/node": "^16.3.2",
+    "@typescript-eslint/eslint-plugin": "^4.29.1",
+    "@typescript-eslint/parser": "^4.29.1",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.24.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.1.0",
     "omi": "^6.23.0",
     "rimraf": "^3.0.2",
     "typescript": "^4.3.5"

@@ -57,6 +57,7 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
         this.update()
         'function' === typeof callback && callback(this.state)
       }
+
       constructor() {
         super()
         this.provide = {
@@ -64,12 +65,15 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
           setState: this.setState
         }
       }
+
       install() {
         this.setState(this.props.state || contextStore.state)
       }
+
       receiveProps() {
         this.setState(this.props.state || contextStore.state)
       }
+
       render(props: Omi.OmiProps<ProviderProps<T>>) {
         return props.children
       }
@@ -93,13 +97,14 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
               }
               : children
       }
+
       receiveProps() {
         if (this.inject) {
-          let p = this.parentNode as (Node & ParentNode & { provide?: any, host?: any }) | null;
-          let provide: Record<string, any> | undefined = undefined;
+          let p = this.parentNode as (Node & ParentNode & { provide?: any, host?: any }) | null
+          let provide: Record<string, any> | undefined
           while (p && !provide) {
-            provide = p.provide;
-            p = p.parentNode || p.host;
+            provide = p.provide
+            p = p.parentNode || p.host
           }
           if (provide) {
             this.injection = this.inject.reduce(
@@ -107,10 +112,11 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
               ({ ...this.injection }) as Record<string, any>
             )
           } else {
-            throw 'The provide prop was not found on the parent node or the provide type is incorrect.';
+            throw Error('The provide prop was not found on the parent node or the provide type is incorrect.')
           }
         }
       }
+
       render(props: Omi.OmiProps<ConsumerProps>) {
         return this.getChildren(props)
       }

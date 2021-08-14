@@ -6,7 +6,7 @@ const loopObject = <ReactiveData extends Record<string, any> = {}>(
   json: ReactiveData,
   fn: (key: string, value: any) => void
 ) => {
-  for (let k in json) {
+  for (const k in json) {
     if (json.hasOwnProperty(k)) {
       fn(k, json[k])
     }
@@ -42,7 +42,7 @@ function MakeReactive<ReactiveData = Record<string, any>>(
       if (prop === '__internal_proxy') {
         Object.defineProperty(obj, prop, {
           enumerable: false,
-          writable: true,
+          writable: true
         })
         return true
       } else if (value instanceof Function) {
@@ -53,14 +53,14 @@ function MakeReactive<ReactiveData = Record<string, any>>(
       // @ts-ignore
       listeners.forEach((e) => e && e.update())
       return true
-    },
+    }
   }
   return bindFns(new Proxy(json, handler))
 }
 
 function reactive<ReactiveData = Record<string, any>>(obj: ReactiveData) {
   const listeners = new Set<ComponentOrElement>()
-  return function () {
+  return function() {
     // @ts-ignore
     return MakeReactive.apply(this, [listeners, obj]) as ReactiveData
   }
