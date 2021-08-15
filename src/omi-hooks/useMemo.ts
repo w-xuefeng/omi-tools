@@ -11,8 +11,8 @@ export default function useMemo<T>(callback: () => T, deps: any[]) {
   if (globalWeakMemoryComputed.has(callback)) {
     const { data: prevData, dependencies: prevDeps = [] } = globalWeakMemoryComputed.get(callback) || {}
     if (
-      prevDeps.length === deps.length
-      && prevDeps.every((dep: any, i: number) => dep === deps[i])
+      prevDeps.length === deps.length &&
+      prevDeps.every((dep: any, i: number) => dep === deps[i])
     ) {
       return prevData
     }
@@ -21,8 +21,8 @@ export default function useMemo<T>(callback: () => T, deps: any[]) {
   if (globalMemoryComputed.has(key)) {
     const { data: prevData, dependencies: prevDeps = [] } = globalMemoryComputed.get(key) || {}
     if (
-      prevDeps.length === deps.length
-      && prevDeps.every((dep: any, i: number) => dep === deps[i])
+      prevDeps.length === deps.length &&
+      prevDeps.every((dep: any, i: number) => dep === deps[i])
     ) {
       return prevData
     }
