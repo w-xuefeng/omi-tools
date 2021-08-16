@@ -70,7 +70,7 @@ Auxiliary tools for omi
 - usecase:
 
   ```tsx
-  import { OC } from 'omi-tools'
+  import { OC, rmIEFP } from 'omi-tools'
   import css from '_style.less'
 
   const tagName = 'o-h1-title'
