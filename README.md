@@ -10,9 +10,9 @@ Auxiliary tools for omi
 | [rmIEFP](#rmIEFP)                 | props: object                                                                                                                                                                     | props(without internal events):object                                                                   | remove internal events from props                                          |
 | [HF.camel2kebab](#HF.camel2kebab) | name(camelCase/PascalCase): string                                                                                                                                                | name(kebabCase): string                                                                                 | convert camelCase or PascalCase to kebabCase                               |
 | [OC.makeFC](#OC.makeFC)           | `tagName`: `string`,<br>`render`: `(props: Omi.OmiProps<Props>, store: Store) => JSX.Element`,<br>`lifeTimes?`: `Partial<IOmiLifetimes<Props, Store>>`,<br>`extraStore?`: `Store` | `FunctionComponent`: `FCConstructor<Props, Store>`                                                      | generate a component or element in the form of render-function declaration |
-| OC.reactive                       | `data`: `object`                                                                                                                                                                  | `hooks`: `Function`                                                                                     | generate some reactive data                                                |
-| OC.createContext                  | `defaultValue`: any                                                                                                                                                               | `IOmiContext<T>`: {<br>`Provider`: `ProviderConstructor<T>`, <br>`Consumer`: `ConsumerConstructor`<br>} | generate Provider/Consumer ComponentConstructor                            |
-| OC.useContext                     | `context`: {<br>`Provider`: `ProviderConstructor<T>`, <br>`Consumer`: `ConsumerConstructor`<br>}                                                                                  | `value`: T                                                                                              | Context Consumer Hooks                                                     |
+| [OC.reactive](#OC.reactive)           | `data`: `object`                                                                                                                                                                  | `hooks`: `Function`                                                                                     | generate some reactive data                                                |
+| [OC.createContext](#OC.createContext)   | `defaultValue`: any                                                                                                                                                               | `IOmiContext<T>`: {<br>`Provider`: `ProviderConstructor<T>`, <br>`Consumer`: `ConsumerConstructor`<br>} | generate Provider/Consumer ComponentConstructor                            |
+| [OC.useContext](#OC.useContext)       | `context`: {<br>`Provider`: `ProviderConstructor<T>`, <br>`Consumer`: `ConsumerConstructor`<br>}                                                                                  | `value`: T                                                                                              | Context Consumer Hooks                                                     |
 | OH.useMemo                        | `callback`: `() => T`,<br>`deps`: `any[]`,<br>`shouldUpdated?: (prevDeps: any[], nextDeps: any[]) => boolean`                                                                     | `computedData`: `T`                                                                                     | computed and memorize result at same dependencies                          |
 
 # Explanation
@@ -99,5 +99,18 @@ Auxiliary tools for omi
   export default Title
   ```
 
-# Usecase
-- [https://codepen.io/w-xuefeng/pen/LYyxqLo](https://codepen.io/w-xuefeng/pen/LYyxqLo)
+
+<h2 id="OC.reactive">OC.reactive</h2>
+
+- desc: generate some reactive data
+- usecase: [https://codepen.io/w-xuefeng/pen/ZEKNyLm](https://codepen.io/w-xuefeng/pen/ZEKNyLm)
+
+<h2 id="OC.createContext">OC.createContext</h2>
+
+- desc: generate Provider/Consumer ComponentConstructor
+- usecase: [https://codepen.io/w-xuefeng/pen/LYyxqLo](https://codepen.io/w-xuefeng/pen/LYyxqLo)
+
+<h2 id="OC.useContext">OC.useContext</h2>
+
+- desc: context Consumer Hooks
+- usecase: [https://codepen.io/w-xuefeng/pen/LYyxqLo](https://codepen.io/w-xuefeng/pen/LYyxqLo)
