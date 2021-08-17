@@ -103,14 +103,14 @@ Auxiliary tools for omi
 <h2 id="OC.reactive">OC.reactive</h2>
 
 - desc: generate some reactive data
-- usecase: [https://codepen.io/w-xuefeng/pen/ZEKNyLm](https://codepen.io/w-xuefeng/pen/ZEKNyLm)
+- usecase: [https://codepen.io/w-xuefeng/pen/ZEKNyLm](https://codepen.io/w-xuefeng/pen/ZEKNyLm?editors=001)
 
 <h2 id="OC.createContext">OC.createContext</h2>
 
 - desc: generate Provider/Consumer ComponentConstructor
-- usecase: [https://codepen.io/w-xuefeng/pen/LYyxqLo](https://codepen.io/w-xuefeng/pen/LYyxqLo)
+- usecase: [https://codepen.io/w-xuefeng/pen/LYyxqLo](https://codepen.io/w-xuefeng/pen/LYyxqLo?editors=001)
 
 <h2 id="OC.useContext">OC.useContext</h2>
 
 - desc: context Consumer Hooks
-- usecase: [https://codepen.io/w-xuefeng/pen/LYyxqLo](https://codepen.io/w-xuefeng/pen/LYyxqLo)
+- usecase: [https://codepen.io/w-xuefeng/pen/LYyxqLo](https://codepen.io/w-xuefeng/pen/LYyxqLo?editors=001)
