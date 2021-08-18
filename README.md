@@ -13,7 +13,7 @@ Auxiliary tools for omi
 | [OC.reactive](#OC.reactive)           | `data`: `object`                                                                                                                                                                  | `hooks`: `Function`                                                                                     | generate some reactive data                                                |
 | [OC.createContext](#OC.createContext)   | `defaultValue`: any                                                                                                                                                               | `IOmiContext<T>`: {<br>`Provider`: `ProviderConstructor<T>`, <br>`Consumer`: `ConsumerConstructor`<br>} | generate Provider/Consumer ComponentConstructor                            |
 | [OC.useContext](#OC.useContext)       | `context`: {<br>`Provider`: `ProviderConstructor<T>`, <br>`Consumer`: `ConsumerConstructor`<br>}                                                                                  | `value`: T                                                                                              | Context Consumer Hooks                                                     |
-| OH.useMemo                        | `callback`: `() => T`,<br>`deps`: `any[]`,<br>`shouldUpdated?: (prevDeps: any[], nextDeps: any[]) => boolean`                                                                     | `computedData`: `T`                                                                                     | computed and memorize result at same dependencies                          |
+| [OH.useMemo](#OH.useMemo)               | `callback`: `() => T`,<br>`deps`: `any[]`,<br>`shouldUpdated?: (prevDeps: any[], nextDeps: any[]) => boolean`                                                                     | `computedData`: `T`                                                                                     | computed and memorize result at same dependencies                          |
 
 # Explanation
 
@@ -117,3 +117,10 @@ Auxiliary tools for omi
 - desc: context Consumer Hooks
 - usecase: [https://codepen.io/w-xuefeng/pen/LYyxqLo](https://codepen.io/w-xuefeng/pen/LYyxqLo?editors=001)
 - preview: [https://codepen.io/w-xuefeng/full/LYyxqLo](https://codepen.io/w-xuefeng/full/LYyxqLo)
+
+<h2 id="OH.useMemo">OH.useMemo</h2>
+
+- desc: computed and memorize result at same dependencies
+- usecase: [https://codepen.io/w-xuefeng/pen/mdmZJQb](https://codepen.io/w-xuefeng/pen/mdmZJQb?editors=001)
+- preview: [https://codepen.io/w-xuefeng/full/mdmZJQb](https://codepen.io/w-xuefeng/full/mdmZJQb)
+
