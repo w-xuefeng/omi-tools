@@ -22,9 +22,6 @@
       "esnext",
       "dom"
     ],
-    "types": [
-      "node"
-    ]
   },
   "include": [
     "src/*" // 导入目录
