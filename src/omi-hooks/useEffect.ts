@@ -1,5 +1,5 @@
 import { WeElement } from 'omi'
-import { useMemo } from '.'
+import { internalUseMemo } from './useMemo'
 
 export default function useEffect(callback: () => Function | undefined, deps?: any[], ctx?: WeElement) {
   // @ts-ignore
@@ -13,10 +13,21 @@ export default function useEffect(callback: () => Function | undefined, deps?: a
    * Backup omi update function
    */
   const omiUpdate = context.update
+
   /**
-   * Empty omi update function
-   */
-  context.update = (ignoreAttrs?: boolean | undefined, updateSelf?: boolean | undefined) => { }
+    * Empty omi update function
+    */
+  const handleBefore = () => {
+    context.update = (ignoreAttrs?: boolean | undefined, updateSelf?: boolean | undefined) => { }
+  }
+
+  /**
+  * Recover omi update function
+  */
+  const handleAfter = () => {
+    context.update = omiUpdate
+  }
+
   /**
    * The function returned by callback will be injected into the lifecycle uninstall
    */
@@ -27,20 +38,26 @@ export default function useEffect(callback: () => Function | undefined, deps?: a
    * otherwise it will cause infinite loop rendering of pages or components
    */
   if (deps && Array.isArray(deps)) {
-    useEffectReturnUninstall = useMemo(callback, deps)
+    useEffectReturnUninstall = internalUseMemo(
+      callback,
+      deps,
+      undefined,
+      {
+        enable: true,
+        handleBefore,
+        handleAfter
+      }
+    )
   } else {
+    handleBefore()
     useEffectReturnUninstall = callback()
+    handleAfter()
   }
-
-  /**
-   * Recover omi update function
-   */
-  context.update = omiUpdate
 
   /**
    * Inject the function returned by callback into the uninstall lifecycle
    */
-  useMemo(() => {
+  internalUseMemo(() => {
     const originUnintall = context.uninstall
     context.uninstall = function() {
       typeof originUnintall === 'function' && originUnintall.apply(this)

@@ -5,15 +5,31 @@ interface IMemoComputed {
 const globalMemoryComputed = new Map<string, IMemoComputed>()
 const globalWeakMemoryComputed = new WeakMap<Function, IMemoComputed>()
 
-export default function useMemo<T>(
+export function internalUseMemo<T>(
   callback: () => T,
   deps: any[],
-  shouldUpdate?: (prevDeps: any[], nextDeps: any) => boolean
+  shouldUpdate?: (prevDeps: any[], nextDeps: any) => boolean,
+  handleEffectOptions?: {
+    enable?: boolean,
+    handleBefore?: Function,
+    handleAfter?: Function
+  }
 ) {
   const key = callback.toString()
 
   const updateComputedResult = () => {
+    handleEffectOptions &&
+    handleEffectOptions.enable &&
+    typeof handleEffectOptions.handleBefore === 'function' &&
+    handleEffectOptions.handleBefore()
+
     const nextData = callback()
+
+    handleEffectOptions &&
+    handleEffectOptions.enable &&
+    typeof handleEffectOptions.handleAfter === 'function' &&
+    handleEffectOptions.handleAfter()
+
     globalMemoryComputed.set(key, { data: nextData, dependencies: deps })
     globalWeakMemoryComputed.set(callback, { data: nextData, dependencies: deps })
     return nextData
@@ -44,4 +60,12 @@ export default function useMemo<T>(
   }
 
   return updateComputedResult()
+}
+
+export default function useMemo<T>(
+  callback: () => T,
+  deps: any[],
+  shouldUpdate?: (prevDeps: any[], nextDeps: any) => boolean
+) {
+  return internalUseMemo(callback, deps, shouldUpdate)
 }
