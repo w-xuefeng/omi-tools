@@ -2,7 +2,6 @@ import { WeElement } from 'omi'
 import { useMemo } from '.'
 
 export default function useEffect(callback: () => Function | undefined, deps?: any[], ctx?: WeElement) {
-
   // @ts-ignore
   const context: WeElement | undefined = (this instanceof WeElement ? this : ctx instanceof WeElement ? ctx : undefined)
 
@@ -43,7 +42,7 @@ export default function useEffect(callback: () => Function | undefined, deps?: a
    */
   useMemo(() => {
     const originUnintall = context.uninstall
-    context.uninstall = function () {
+    context.uninstall = function() {
       typeof originUnintall === 'function' && originUnintall.apply(this)
       typeof useEffectReturnUninstall === 'function' && useEffectReturnUninstall.apply(this)
     }
