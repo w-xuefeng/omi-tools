@@ -1,12 +1,12 @@
 import { WeElement } from 'omi'
-import { internalUseMemo } from './useMemo'
+import internalComputed from './internalComputed'
 
 export default function useEffect(callback: () => Function | undefined, deps?: any[], ctx?: WeElement) {
   // @ts-ignore
   const context: WeElement | undefined = (this instanceof WeElement ? this : ctx instanceof WeElement ? ctx : undefined)
 
   if (!context) {
-    return console.error('[Omi-Hooks Error] useEffect can only be used inside OmiComponents or WeElement. If you use it elsewhere or use arrow functions, you need to provide a context for it. You can choose one of the following three:\n\t1. useEffect(callback, dependencies, context);\n\t2. useEffect.apply(context, [callback, dependencies]);\n\t3. useEffect.call(context, callback, dependencies);')
+    return console.error('[Omi-Hooks Error] You need to provide a context for useEffect. You can choose one of the following three:\n\t1. useEffect(callback, dependencies, context);\n\t2. useEffect.apply(context, [callback, dependencies]);\n\t3. useEffect.call(context, callback, dependencies);')
   }
 
   /**
@@ -38,7 +38,8 @@ export default function useEffect(callback: () => Function | undefined, deps?: a
    * otherwise it will cause infinite loop rendering of pages or components
    */
   if (deps && Array.isArray(deps)) {
-    useEffectReturnUninstall = internalUseMemo(
+    useEffectReturnUninstall = internalComputed.apply(context, [
+      'useEffect',
       callback,
       deps,
       undefined,
@@ -47,7 +48,7 @@ export default function useEffect(callback: () => Function | undefined, deps?: a
         handleBefore,
         handleAfter
       }
-    )
+    ])
   } else {
     handleBefore()
     useEffectReturnUninstall = callback()
@@ -57,11 +58,15 @@ export default function useEffect(callback: () => Function | undefined, deps?: a
   /**
    * Inject the function returned by callback into the uninstall lifecycle
    */
-  internalUseMemo(() => {
-    const originUnintall = context.uninstall
-    context.uninstall = function() {
-      typeof originUnintall === 'function' && originUnintall.apply(this)
-      typeof useEffectReturnUninstall === 'function' && useEffectReturnUninstall.apply(this)
-    }
-  }, [useEffectReturnUninstall])
+  internalComputed.apply(context, [
+    'useEffect',
+    () => {
+      const originUnintall = context.uninstall
+      context.uninstall = function() {
+        typeof originUnintall === 'function' && originUnintall.apply(this)
+        typeof useEffectReturnUninstall === 'function' && useEffectReturnUninstall.apply(this)
+      }
+    },
+    [useEffectReturnUninstall]
+  ])
 }

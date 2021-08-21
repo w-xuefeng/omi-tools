@@ -1,9 +1,12 @@
-import { useMemo } from '.'
+import { WeElement } from 'omi'
+import internalComputed from './internalComputed'
 
 export default function useCallback(
   callback: () => any,
   deps: any[],
-  shouldUpdate?: (prevDeps: any[], nextDeps: any) => boolean
+  shouldUpdate?: (prevDeps: any[], nextDeps: any) => boolean,
+  ctx?: WeElement
 ) {
-  return useMemo(() => callback, deps, shouldUpdate)
+  // @ts-ignore
+  return internalComputed.apply(ctx || this, ['useCallback', () => callback, deps, shouldUpdate])
 }
