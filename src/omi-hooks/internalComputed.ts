@@ -5,9 +5,12 @@ interface IMemoComputed {
   dependencies: any[],
   context: WeElement
 }
+interface IMemoContextComputed {
+  globalMemoryComputed: Map<string, IMemoComputed>
+  globalWeakMemoryComputed: WeakMap<Function, IMemoComputed>
+}
 type OmiHooks = 'useEffect' | 'useMemo' | 'useCallback'
-const globalMemoryComputed = new Map<string, IMemoComputed>()
-const globalWeakMemoryComputed = new WeakMap<Function, IMemoComputed>()
+const globalContextMemoryComputed = new WeakMap<WeElement, IMemoContextComputed>()
 
 export default function internalComputed<T>(
   hooksName: OmiHooks,
@@ -26,7 +29,17 @@ export default function internalComputed<T>(
     return console.error(`[Omi-Hooks Error] You need to provide a context for ${hooksName}, such as ${hooksName}.apply(context, args)`)
   }
 
-  const key = `${context.tagName}-${callback.toString()}`
+  const defaultMemoryComputed = {
+    globalMemoryComputed: new Map<string, IMemoComputed>(),
+    globalWeakMemoryComputed: new WeakMap<Function, IMemoComputed>()
+  }
+
+  const {
+    globalMemoryComputed,
+    globalWeakMemoryComputed
+  } = globalContextMemoryComputed.get(context) || defaultMemoryComputed
+
+  const key = `${context.tagName}-${hooksName}-${callback.toString()}`
 
   const updateComputedResult = () => {
     handleEffectOptions &&
@@ -43,6 +56,7 @@ export default function internalComputed<T>(
 
     globalMemoryComputed.set(key, { data: nextData, dependencies: deps, context })
     globalWeakMemoryComputed.set(callback, { data: nextData, dependencies: deps, context })
+    globalContextMemoryComputed.set(context, { globalMemoryComputed, globalWeakMemoryComputed })
     return nextData
   }
 
