@@ -16,7 +16,7 @@ module.exports = {
       jsx: true,
       globalReturn: true,
       impliedStrict: true,
-      experimentalObjectRestSpread: true,
+      experimentalObjectRestSpread: true
     }
   },
   plugins: [
@@ -31,12 +31,12 @@ module.exports = {
     'space-before-function-paren': [
       'error',
       {
-        'anonymous': 'never',
-        'named': 'never',
-        'asyncArrow': 'always'
+        anonymous: 'never',
+        named: 'never',
+        asyncArrow: 'always'
       }
     ],
-    'no-return-assign':[0, 'never'],
+    'no-return-assign': [0, 'never'],
     'no-prototype-builtins': [0, 'never'],
     'no-sequences': [0, 'never'],
     indent: [2, 2],

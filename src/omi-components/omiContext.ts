@@ -35,7 +35,7 @@ export default function createContext<T>(defaultValue: T): IOmiContext<T> {
   const contextStore = { state: defaultValue }
   const Provider = (() => {
     class Provider extends WeElement<ProviderProps<T>> {
-      provide: ProviderPropsWithSetter<T>;
+      provide: ProviderPropsWithSetter<T>
       state = contextStore.state
       setState = (value: Partial<T> | ((preValue: T) => T | Partial<T>), callback?: (state: T) => void) => {
         const nextPartialValue = typeof value === 'function' ? value(this.state) : value
