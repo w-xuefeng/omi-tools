@@ -39,7 +39,7 @@ export function createFunctionComp<Props = any, Store = any>(
     static isLightDom = options.isLightDom
     compute = options.compute
     render(props: Omi.OmiProps<Props>, store: Store) {
-      return checkLifeOptionsRun(options, 'renderWithThis', this, [props, { ...store, ...extraStore }, this])
+      return checkLifeOptionsRun(options, 'renderWithThis', this as Omi.WeElement, [props, { ...store, ...extraStore }, this])
     }
   }
 
