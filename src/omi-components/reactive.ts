@@ -2,9 +2,9 @@ import { WeElement, Component } from 'omi'
 
 export type ComponentOrElement = WeElement | Component
 
-const loopObject = <ReactiveData extends Record<string, any> = {}>(
+const loopObject = <ReactiveData extends Record<string, any>>(
   json: ReactiveData,
-  fn: (key: string, value: any) => void
+  fn: (key: keyof ReactiveData, value: any) => void
 ) => {
   for (const k in json) {
     if (json.hasOwnProperty(k)) {
@@ -14,9 +14,8 @@ const loopObject = <ReactiveData extends Record<string, any> = {}>(
   return json
 }
 
-const bindFns = <ReactiveData = any>(json: ReactiveData) => {
+const bindFns = <ReactiveData extends Record<string, any>>(json: ReactiveData) => {
   return loopObject(json, (k, fn) => {
-    // @ts-ignore
     if (fn instanceof Function) json[k] = fn.bind(json)
   })
 }
@@ -55,7 +54,7 @@ function MakeReactive<ReactiveData = Record<string, any>>(
       return true
     }
   }
-  return bindFns(new Proxy(json, handler))
+  return bindFns(new Proxy(json as object, handler))
 }
 
 function reactive<ReactiveData = Record<string, any>>(obj: ReactiveData) {

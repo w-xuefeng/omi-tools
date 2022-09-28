@@ -28,17 +28,17 @@
   ],
   "homepage": "https://github.com/w-xuefeng/omi-tools#readme",
   "devDependencies": {
-    "@types/node": "^18.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.30.3",
-    "@typescript-eslint/parser": "^5.30.3",
-    "eslint": "^8.19.0",
+    "@types/node": "^18.7.23",
+    "@typescript-eslint/eslint-plugin": "^5.38.1",
+    "@typescript-eslint/parser": "^5.38.1",
+    "eslint": "^8.24.0",
     "eslint-config-standard": "^17.0.0",
     "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-n": "^15.2.3",
+    "eslint-plugin-n": "^15.3.0",
     "eslint-plugin-node": "^11.1.0",
-    "eslint-plugin-promise": "^6.0.0",
-    "omi": "^6.23.1",
+    "eslint-plugin-promise": "^6.0.1",
+    "omi": "^6.25.10",
     "rimraf": "^3.0.2",
-    "typescript": "^4.7.4"
+    "typescript": "^4.8.4"
   }
 }
